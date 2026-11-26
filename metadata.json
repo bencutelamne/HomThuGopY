@@ -1,0 +1,6 @@
+{
+  "name": "HeThongKhaoSatTrucTuyen",
+  "description": "Hệ thống tạo, triển khai khảo sát trực tuyến ẩn danh, gửi ý kiến nguyện vọng và tự động tổng hợp báo cáo kết quả trên PC, máy tính bảng và điện thoại.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
