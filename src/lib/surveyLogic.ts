@@ -46,7 +46,7 @@ export function toVietnamInputParts(isoString: string): { date: string; time: st
  */
 export function formatVietnamDateTime(isoString: string): string {
   const { date, time } = toVietnamInputParts(isoString);
-  if (!date) return '—';
+  if (!date) return '-';
   const [y, m, d] = date.split('-');
   return `${d}/${m}/${y} ${time}`;
 }

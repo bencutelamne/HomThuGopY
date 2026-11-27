@@ -1,22 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --color-bg: #eeede8;
-  --color-surface: #f3f2ed;
-  --color-surface-elevated: #f8f7f3;
-  --color-text: #11110f;
-  --color-text-muted: #686862;
-  --color-border: rgba(17, 17, 15, 0.28);
-  --color-border-soft: rgba(17, 17, 15, 0.14);
-  --color-inverse-bg: #11110f;
-  --color-inverse-text: #eeede8;
-  --color-status-active: #166534;
-  --color-status-warning: #9a5b08;
-  --color-status-closed: #991b1b;
+  --color-nav-bg: #1b4225;
+  --color-bg: #224d2d;
+  --color-surface: rgba(255, 255, 255, 0.07);
+  --color-surface-solid: #295735;
+  --color-surface-elevated: rgba(20, 49, 28, 0.9);
+  --color-ribbon-bg: #fdf5df;
+  --color-ribbon-text: #1b4225;
 
-  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
-  --font-body: "Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-text: #ffffff;
+  --color-text-muted: #cbe0d0;
+  --color-border: rgba(255, 255, 255, 0.22);
+  --color-border-soft: rgba(255, 255, 255, 0.14);
+
+  --color-inverse-bg: #f3c43b;
+  --color-inverse-text: #183a21;
+  --color-accent-gold: #f3c43b;
+  --color-accent-red: #cf2a2a;
+
+  --color-status-active: #86efac;
+  --color-status-warning: #fcd34d;
+  --color-status-closed: #fca5a5;
+
+  --color-seal-bg: #122e1a;
+  --color-seal-text: #ffffff;
+  --color-seal-accent: #f3c43b;
+
+  --font-display: "Be Vietnam Pro", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Be Vietnam Pro", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Be Vietnam Pro", "Helvetica Neue", Arial, sans-serif;
 
   --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -41,7 +54,7 @@
 
   /* Custom focus rings for keyboard accessibility */
   :focus-visible {
-    outline: 2px solid var(--color-text);
+    outline: 2px solid var(--color-accent-gold);
     outline-offset: 2px;
   }
 
@@ -56,6 +69,10 @@
   font-family: var(--font-display);
 }
 
+.font-lockup-display {
+  font-family: "Barlow Condensed", "Be Vietnam Pro", sans-serif;
+}
+
 .font-mono-tabular {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
@@ -65,30 +82,40 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Structural Swiss editorial button inversion */
+/* Golden military primary CTA matching reference 2 */
 .btn-editorial-primary {
   background-color: var(--color-inverse-bg);
   color: var(--color-inverse-text);
   border: 1px solid var(--color-inverse-bg);
-  transition: background-color 180ms var(--ease-standard), color 180ms var(--ease-standard), transform 180ms var(--ease-out);
+  border-radius: 0.5rem;
+  font-weight: 700;
+  transition: background-color 180ms var(--ease-standard), border-color 180ms var(--ease-standard), transform 180ms var(--ease-out);
 }
 
 .btn-editorial-primary:hover:not(:disabled) {
-  background-color: transparent;
-  color: var(--color-text);
+  background-color: #fad35c;
+  border-color: #fad35c;
+  transform: translateY(-1px);
 }
 
 .btn-editorial-outline {
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.06);
   color: var(--color-text);
   border: 1px solid var(--color-border);
-  transition: background-color 180ms var(--ease-standard), color 180ms var(--ease-standard), border-color 180ms var(--ease-standard);
+  border-radius: 0.5rem;
+  transition: background-color 180ms var(--ease-standard), border-color 180ms var(--ease-standard), color 180ms var(--ease-standard);
 }
 
 .btn-editorial-outline:hover:not(:disabled) {
-  background-color: var(--color-inverse-bg);
-  color: var(--color-inverse-text);
-  border-color: var(--color-inverse-bg);
+  background-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: var(--color-text);
+}
+
+.glass-panel {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0.75rem;
 }
 
 @keyframes viewEnter {

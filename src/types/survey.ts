@@ -46,14 +46,94 @@ export interface SurveyResponse {
   answers: SurveyAnswerValue[];
 }
 
+export type UserRole = 'admin' | 'officer' | 'soldier';
+
+export interface RoleMetadata {
+  role: UserRole;
+  level: 1 | 2 | 3;
+  label: string;
+  shortLabel: string;
+  description: string;
+}
+
+export const USER_ROLE_META: Record<UserRole, RoleMetadata> = {
+  admin: {
+    role: 'admin',
+    level: 1,
+    label: 'Adminstrator',
+    shortLabel: 'Adminstrator',
+    description: 'Quyền cao nhất, có thể sử dụng toàn bộ chức năng của trang web.',
+  },
+  officer: {
+    role: 'officer',
+    level: 2,
+    label: 'Cán bộ',
+    shortLabel: 'Cán bộ',
+    description: 'Được xem các lá thư góp ý, đánh dấu trạng thái tiếp nhận và gửi góp ý.',
+  },
+  soldier: {
+    role: 'soldier',
+    level: 3,
+    label: 'Chiến sĩ',
+    shortLabel: 'Chiến sĩ',
+    description: 'Chỉ duy nhất có quyền đóng góp ý kiến cho đơn vị của mình thông qua hòm thư góp ý.',
+  },
+};
+
+export const USER_ROLE_ORDER: UserRole[] = ['admin', 'officer', 'soldier'];
+
+export interface AuthUser {
+  id: string;
+  username: string;
+  displayName: string;
+  fullName: string;
+  dateOfBirth: string; // YYYY-MM-DD
+  unit: FeedbackUnit;
+  role: UserRole;
+}
+
+export interface AccountRecord extends AuthUser {
+  passwordHash: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PublicAccount extends AuthUser {
+  createdAt: string;
+  updatedAt: string;
+  isRootAdmin: boolean;
+}
+
+export interface AccountCreateInput {
+  username: string;
+  password: string;
+  fullName: string;
+  dateOfBirth: string;
+  unit: string;
+  role: UserRole;
+}
+
+export interface AccountUpdateInput {
+  fullName?: string;
+  dateOfBirth?: string;
+  unit?: string;
+  role?: UserRole;
+  password?: string;
+}
+
+export interface FeedbackSummary {
+  total: number;
+  byUnit: Record<string, number>;
+}
+
 export interface FeedbackEntry {
   id: string;
   receiptCode: string;
-  category: string;
+  category?: string;
   targetUnit: string;
   isAnonymous: boolean;
   senderName?: string;
-  subject: string;
+  subject?: string;
   content: string;
   createdAt: string;
   status: 'received' | 'reviewed';
@@ -103,6 +183,10 @@ export interface SurveyReport {
   questionReports: QuestionReport[];
   generatedAt: string;
 }
+
+export const FEEDBACK_UNITS = ['Đại đội 1', 'Đại đội 104', 'Đại đội 102'] as const;
+
+export type FeedbackUnit = (typeof FEEDBACK_UNITS)[number];
 
 export const AVAILABLE_UNITS: string[] = [
   'Phòng Tham mưu',

@@ -21,10 +21,10 @@
           "prompt": "Đồng chí đánh giá như thế nào về công tác quán triệt nhiệm vụ, nắm bắt và giải quyết tình hình tư tưởng tại đơn vị?",
           "required": true,
           "options": [
-            "Rất tốt — Kịp thời, sâu sát, giải quyết thấu đáo",
-            "Tốt — Đáp ứng yêu cầu nhiệm vụ",
-            "Trung bình — Cần tăng cường đối thoại trực tiếp",
-            "Chưa đạt — Còn chậm nắm bắt tâm tư bộ đội"
+            "Rất tốt - Kịp thời, sâu sát, giải quyết thấu đáo",
+            "Tốt - Đáp ứng yêu cầu nhiệm vụ",
+            "Trung bình - Cần tăng cường đối thoại trực tiếp",
+            "Chưa đạt - Còn chậm nắm bắt tâm tư bộ đội"
           ]
         },
         {
@@ -166,7 +166,7 @@
         {
           "questionId": "q-01-1",
           "selectedOptions": [
-            "Rất tốt — Kịp thời, sâu sát, giải quyết thấu đáo"
+            "Rất tốt - Kịp thời, sâu sát, giải quyết thấu đáo"
           ]
         },
         {
@@ -192,7 +192,7 @@
         {
           "questionId": "q-01-1",
           "selectedOptions": [
-            "Tốt — Đáp ứng yêu cầu nhiệm vụ"
+            "Tốt - Đáp ứng yêu cầu nhiệm vụ"
           ]
         },
         {
@@ -219,7 +219,7 @@
         {
           "questionId": "q-01-1",
           "selectedOptions": [
-            "Rất tốt — Kịp thời, sâu sát, giải quyết thấu đáo"
+            "Rất tốt - Kịp thời, sâu sát, giải quyết thấu đáo"
           ]
         },
         {
@@ -244,7 +244,7 @@
         {
           "questionId": "q-01-1",
           "selectedOptions": [
-            "Trung bình — Cần tăng cường đối thoại trực tiếp"
+            "Trung bình - Cần tăng cường đối thoại trực tiếp"
           ]
         },
         {
@@ -359,28 +359,31 @@
       ]
     }
   ],
-  "feedback": [
+  "feedback": [],
+  "accounts": [
     {
-      "id": "fb-1",
-      "receiptCode": "YK-2026-104",
-      "category": "Đời sống, chế độ & Hậu cần",
-      "targetUnit": "Tiểu đoàn 2",
-      "isAnonymous": true,
-      "subject": "Đề xuất điều chỉnh giờ mở cửa phòng đọc sách buổi tối",
-      "content": "Kính đề nghị chỉ huy đơn vị xem xét kéo dài thời gian mở phòng đọc đến 21h30 các ngày thứ Tư và thứ Sáu để cán bộ, chiến sĩ có thêm thời gian ôn tập tài liệu.",
-      "createdAt": "2026-11-22T19:30:00+07:00",
-      "status": "reviewed"
+      "id": "acc-root-admin",
+      "username": "admin",
+      "displayName": "Quản trị viên hệ thống",
+      "fullName": "Quản trị viên hệ thống",
+      "dateOfBirth": "2001-10-12",
+      "unit": "Đại đội 104",
+      "role": "admin",
+      "passwordHash": "scrypt$ec59fda84f895bb8b4b34c492f17ffa6$68ce8cc2001d97061b484c153b9dcafb2d7f3b1053b3cfc8cf2db2fd592eae9ba2ec55836f5abeddfb0660da3c4dcae1dddd955f9032f15d4c09187849cf2e37",
+      "createdAt": "2026-11-27T08:05:24.534Z",
+      "updatedAt": "2026-11-27T08:12:52.150Z"
     },
     {
-      "id": "fb-2",
-      "receiptCode": "YK-2026-109",
-      "category": "Bảo vệ an ninh & Dân chủ cơ sở",
-      "targetUnit": "Toàn hệ thống",
-      "isAnonymous": true,
-      "subject": "Góp ý quy trình tiếp nhận phiếu khảo sát định kỳ",
-      "content": "Việc điền phiếu trực tuyến ẩn danh trên điện thoại giúp anh em mạnh dạn phản ánh những vấn đề thực tế hơn rất nhiều so với bỏ phiếu giấy tập trung.",
-      "createdAt": "2026-11-24T10:15:00+07:00",
-      "status": "received"
+      "id": "acc-1795767224739-2b53ac",
+      "username": "huynhgiakiet1",
+      "displayName": "Huỳnh Gia Kiệt",
+      "fullName": "Huỳnh Gia Kiệt",
+      "dateOfBirth": "1999-01-11",
+      "unit": "Đại đội 102",
+      "role": "soldier",
+      "passwordHash": "scrypt$b4efa22a9ae554914bcd474acce215d0$0d1681f811628b427cc7dfdcb571fd26689efa463c09c981c21f54c2330db932f9e614a01da5a358d08e7179c8778fe9eeff7465cde355a62518ebc872d13a7b",
+      "createdAt": "2026-11-27T08:13:44.739Z",
+      "updatedAt": "2026-11-27T08:15:14.909Z"
     }
   ]
 }

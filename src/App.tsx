@@ -1,166 +1,196 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
-  fetchSurveys,
-  toggleSurveyLock,
-  type SurveyListItem,
+  clearAllFeedback,
+  fetchCurrentUser,
+  fetchFeedback,
+  fetchFeedbackSummary,
+  logoutAccount,
+  submitFeedback,
+  toggleFeedbackStatus,
 } from './api/client';
-import { CreateSurveyPage } from './components/create/CreateSurveyPage';
-import { DirectFeedbackPage } from './components/feedback/DirectFeedbackPage';
-import { OverviewPage } from './components/home/OverviewPage';
-import { SiteFooter } from './components/layout/SiteFooter';
-import { SiteHeader, type AppView } from './components/layout/SiteHeader';
-import { ReportPage } from './components/report/ReportPage';
-import { TakeSurveyPage } from './components/take/TakeSurveyPage';
-import type { Survey } from './types/survey';
+import { AccountDashboardPage } from './components/admin/AccountDashboardPage';
+import { LoginPage } from './components/auth/LoginPage';
+import { FeedbackBoxPage } from './components/feedback/FeedbackBoxPage';
+import { SiteHeader, type AppTab } from './components/layout/SiteHeader';
+import type { AuthUser, FeedbackEntry, FeedbackSummary } from './types/survey';
 
-function getInitialRoute(): { view: AppView; surveyId: string | null } {
-  if (typeof window === 'undefined') {
-    return { view: 'overview', surveyId: null };
-  }
-  const params = new URLSearchParams(window.location.search);
-  const rawView = params.get('view');
-  const id = params.get('id');
-  const validViews: AppView[] = ['overview', 'create', 'take', 'report', 'feedback'];
-  const view = validViews.includes(rawView as AppView) ? (rawView as AppView) : 'overview';
-  return { view, surveyId: id };
-}
+const EMPTY_SUMMARY: FeedbackSummary = {
+  total: 0,
+  byUnit: {},
+};
 
 export default function App() {
-  const initial = getInitialRoute();
-  const [activeView, setActiveView] = useState<AppView>(initial.view);
-  const [selectedSurveyId, setSelectedSurveyId] = useState<string | null>(initial.surveyId);
-  const [surveys, setSurveys] = useState<SurveyListItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [bannerMessage, setBannerMessage] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<AppTab>('submit');
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [feedbackList, setFeedbackList] = useState<FeedbackEntry[]>([]);
+  const [feedbackSummary, setFeedbackSummary] = useState<FeedbackSummary>(EMPTY_SUMMARY);
 
-  const loadSurveys = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const loadSummary = useCallback(async () => {
     try {
-      const list = await fetchSurveys();
-      setSurveys(list);
-    } catch (err) {
-      setError((err as Error).message || 'Không thể tải danh sách khảo sát.');
-    } finally {
-      setLoading(false);
+      const summary = await fetchFeedbackSummary();
+      setFeedbackSummary(summary);
+    } catch {
+      // Keep current summary if API is unavailable
+    }
+  }, []);
+
+  const loadAccessibleFeedback = useCallback(async (user: AuthUser | null) => {
+    if (user?.role !== 'admin' && user?.role !== 'officer') {
+      setFeedbackList([]);
+      return;
+    }
+    try {
+      const list = await fetchFeedback();
+      setFeedbackList(list);
+    } catch {
+      setFeedbackList([]);
     }
   }, []);
 
   useEffect(() => {
-    void loadSurveys();
-  }, [loadSurveys]);
+    let active = true;
+    Promise.all([fetchCurrentUser(), fetchFeedbackSummary()])
+      .then(async ([user, summary]) => {
+        if (!active) return;
+        setCurrentUser(user);
+        setFeedbackSummary(summary);
+        if (user?.role === 'admin' || user?.role === 'officer') {
+          try {
+            const list = await fetchFeedback();
+            if (active) setFeedbackList(list);
+          } catch {
+            if (active) setFeedbackList([]);
+          }
+        }
+      })
+      .catch(() => {
+        // Keep defaults if API is unavailable
+      });
 
-  const syncUrl = (view: AppView, surveyId: string | null) => {
-    const params = new URLSearchParams();
-    if (view !== 'overview') {
-      params.set('view', view);
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleLoginSuccess = async (user: AuthUser) => {
+    setCurrentUser(user);
+    await loadAccessibleFeedback(user);
+    setActiveTab('submit');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoutAccount();
+    } finally {
+      setCurrentUser(null);
+      setFeedbackList([]);
+      if (activeTab === 'list' || activeTab === 'accounts') {
+        setActiveTab('submit');
+      }
     }
-    if (surveyId && (view === 'take' || view === 'report')) {
-      params.set('id', surveyId);
+  };
+
+  const handleSubmitFeedback = async (payload: {
+    targetUnit: string;
+    isAnonymous: boolean;
+    senderName?: string;
+    content: string;
+  }) => {
+    const created = await submitFeedback(payload);
+    if (currentUser?.role === 'admin' || currentUser?.role === 'officer') {
+      setFeedbackList((prev) => [created, ...prev]);
     }
-    const qs = params.toString();
-    const nextUrl = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
-    window.history.replaceState({}, '', nextUrl);
+    await loadSummary();
+    return created;
   };
 
-  const navigate = (view: AppView, surveyId: string | null = selectedSurveyId) => {
-    setActiveView(view);
-    setSelectedSurveyId(surveyId);
-    syncUrl(view, surveyId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleToggleStatus = async (id: string) => {
+    const updated = await toggleFeedbackStatus(id);
+    setFeedbackList((prev) => prev.map((item) => (item.id === id ? updated : item)));
   };
 
-  const handleOpenTake = (surveyId: string) => {
-    navigate('take', surveyId);
-  };
-
-  const handleOpenReport = (surveyId: string) => {
-    navigate('report', surveyId);
-  };
-
-  const handleSurveyCreated = async (created: Survey) => {
-    await loadSurveys();
-    setBannerMessage(`Đã phát hành phiếu khảo sát "${created.title}" (${created.code}).`);
-    navigate('overview', created.id);
-    window.setTimeout(() => setBannerMessage(null), 6000);
-  };
-
-  const handleToggleLock = async (surveyId: string) => {
-    await toggleSurveyLock(surveyId);
-    await loadSurveys();
+  const handleClearAllFeedback = async () => {
+    await clearAllFeedback();
+    setFeedbackList([]);
+    await loadSummary();
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-text)]">
+    <div className="relative flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-text)]">
       <SiteHeader
-        activeView={activeView}
-        onNavigate={(v) => navigate(v, selectedSurveyId)}
+        activeTab={activeTab}
+        onSelectTab={setActiveTab}
+        feedbackCount={feedbackList.length}
+        currentUser={currentUser}
+        onLogout={handleLogout}
       />
 
-      {bannerMessage && (
+      <main className="relative flex-1 overflow-hidden">
+        {/* Decorative bottom-right patriotic crimson & gold flag wave matching reference 2 */}
         <div
-          role="status"
-          className="border-b border-[var(--color-status-active)] bg-[var(--color-surface)] px-4 py-3 text-sm font-medium text-[var(--color-status-active)] sm:px-6"
+          aria-hidden="true"
+          className="pointer-events-none fixed bottom-0 right-0 z-0 w-[340px] sm:w-[460px] lg:w-[560px] opacity-90 select-none no-print"
         >
-          <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4">
-            <span>{bannerMessage}</span>
-            <button
-              type="button"
-              onClick={() => setBannerMessage(null)}
-              className="text-xs font-semibold uppercase tracking-wider underline cursor-pointer"
-            >
-              Đóng
-            </button>
-          </div>
+          <svg viewBox="0 0 560 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto block">
+            <path
+              d="M90 220C215 168 330 85 560 12V220H90Z"
+              fill="#B91C1C"
+              fillOpacity="0.88"
+            />
+            <path
+              d="M145 220C275 165 385 110 560 72V220H145Z"
+              fill="#991B1B"
+              fillOpacity="0.92"
+            />
+            <path
+              d="M84 220C212 168 328 84 560 10"
+              stroke="#F3C43B"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+            <path
+              d="M175 220C300 172 415 125 560 95"
+              stroke="#F3C43B"
+              strokeOpacity="0.5"
+              strokeWidth="2"
+            />
+            <polygon
+              points="468,78 474.5,97 494.5,97 478.2,108.8 484.4,128 468,116.2 451.6,128 457.8,108.8 441.5,97 461.5,97"
+              fill="#F3C43B"
+            />
+          </svg>
         </div>
-      )}
 
-      <main className="flex-1">
-        <div key={activeView} className="view-enter">
-            {activeView === 'overview' && (
-              <OverviewPage
-                surveys={surveys}
-                loading={loading}
-                error={error}
-                onNavigate={(v) => navigate(v)}
-                onOpenTake={handleOpenTake}
-                onOpenReport={handleOpenReport}
-                onToggleLock={handleToggleLock}
-                onRetry={loadSurveys}
-              />
-            )}
-
-            {activeView === 'create' && (
-              <CreateSurveyPage
-                onCreated={handleSurveyCreated}
-                onCancel={() => navigate('overview')}
-              />
-            )}
-
-            {activeView === 'take' && (
-              <TakeSurveyPage
-                surveys={surveys}
-                selectedSurveyId={selectedSurveyId}
-                onSelectSurvey={(id) => navigate('take', id)}
-                onSubmitted={loadSurveys}
-                onOpenReport={handleOpenReport}
-              />
-            )}
-
-            {activeView === 'report' && (
-              <ReportPage
-                surveys={surveys}
-                selectedSurveyId={selectedSurveyId}
-                onSelectSurvey={(id) => navigate('report', id)}
-              />
-            )}
-
-            {activeView === 'feedback' && <DirectFeedbackPage />}
+        <div key={activeTab} className="view-enter relative z-10">
+          {activeTab === 'login' ? (
+            <LoginPage
+              currentUser={currentUser}
+              onLoginSuccess={handleLoginSuccess}
+              onLogout={handleLogout}
+              onBackHome={() => setActiveTab('submit')}
+              onGoList={() => setActiveTab('list')}
+              onGoAccounts={() => setActiveTab('accounts')}
+            />
+          ) : activeTab === 'accounts' ? (
+            <AccountDashboardPage
+              currentUser={currentUser}
+              onSwitchTab={setActiveTab}
+              onSelfAccountUpdated={(updated) => setCurrentUser(updated)}
+            />
+          ) : (
+            <FeedbackBoxPage
+              activeTab={activeTab}
+              currentUser={currentUser}
+              feedbackList={feedbackList}
+              feedbackSummary={feedbackSummary}
+              onSubmitFeedback={handleSubmitFeedback}
+              onToggleStatus={handleToggleStatus}
+              onClearAllFeedback={handleClearAllFeedback}
+              onSwitchTab={setActiveTab}
+            />
+          )}
         </div>
       </main>
-
-      <SiteFooter onNavigate={(v) => navigate(v)} />
     </div>
   );
 }

@@ -25,10 +25,10 @@ export const SEED_SURVEYS: Survey[] = [
           'Đồng chí đánh giá như thế nào về công tác quán triệt nhiệm vụ, nắm bắt và giải quyết tình hình tư tưởng tại đơn vị?',
         required: true,
         options: [
-          'Rất tốt — Kịp thời, sâu sát, giải quyết thấu đáo',
-          'Tốt — Đáp ứng yêu cầu nhiệm vụ',
-          'Trung bình — Cần tăng cường đối thoại trực tiếp',
-          'Chưa đạt — Còn chậm nắm bắt tâm tư bộ đội',
+          'Rất tốt - Kịp thời, sâu sát, giải quyết thấu đáo',
+          'Tốt - Đáp ứng yêu cầu nhiệm vụ',
+          'Trung bình - Cần tăng cường đối thoại trực tiếp',
+          'Chưa đạt - Còn chậm nắm bắt tâm tư bộ đội',
         ],
       },
       {
@@ -169,7 +169,7 @@ export const SEED_RESPONSES: SurveyResponse[] = [
     submittedAt: '2026-11-18T08:15:00+07:00',
     respondentUnit: 'Tiểu đoàn 1',
     answers: [
-      { questionId: 'q-01-1', selectedOptions: ['Rất tốt — Kịp thời, sâu sát, giải quyết thấu đáo'] },
+      { questionId: 'q-01-1', selectedOptions: ['Rất tốt - Kịp thời, sâu sát, giải quyết thấu đáo'] },
       {
         questionId: 'q-01-2',
         selectedOptions: [
@@ -190,7 +190,7 @@ export const SEED_RESPONSES: SurveyResponse[] = [
     submittedAt: '2026-11-18T14:30:00+07:00',
     respondentUnit: 'Tiểu đoàn 2',
     answers: [
-      { questionId: 'q-01-1', selectedOptions: ['Tốt — Đáp ứng yêu cầu nhiệm vụ'] },
+      { questionId: 'q-01-1', selectedOptions: ['Tốt - Đáp ứng yêu cầu nhiệm vụ'] },
       {
         questionId: 'q-01-2',
         selectedOptions: [
@@ -212,7 +212,7 @@ export const SEED_RESPONSES: SurveyResponse[] = [
     submittedAt: '2026-11-19T09:10:00+07:00',
     respondentUnit: 'Phòng Tham mưu',
     answers: [
-      { questionId: 'q-01-1', selectedOptions: ['Rất tốt — Kịp thời, sâu sát, giải quyết thấu đáo'] },
+      { questionId: 'q-01-1', selectedOptions: ['Rất tốt - Kịp thời, sâu sát, giải quyết thấu đáo'] },
       {
         questionId: 'q-01-2',
         selectedOptions: ['Tổ chức huấn luyện, sẵn sàng chiến đấu sát thực tế'],
@@ -230,7 +230,7 @@ export const SEED_RESPONSES: SurveyResponse[] = [
     submittedAt: '2026-11-20T16:40:00+07:00',
     respondentUnit: 'Đại đội Thông tin',
     answers: [
-      { questionId: 'q-01-1', selectedOptions: ['Trung bình — Cần tăng cường đối thoại trực tiếp'] },
+      { questionId: 'q-01-1', selectedOptions: ['Trung bình - Cần tăng cường đối thoại trực tiếp'] },
       {
         questionId: 'q-01-2',
         selectedOptions: [
@@ -306,25 +306,32 @@ export const SEED_FEEDBACK: FeedbackEntry[] = [
   {
     id: 'fb-1',
     receiptCode: 'YK-2026-104',
-    category: 'Đời sống, chế độ & Hậu cần',
-    targetUnit: 'Tiểu đoàn 2',
+    targetUnit: 'Đại đội 104',
     isAnonymous: true,
-    subject: 'Đề xuất điều chỉnh giờ mở cửa phòng đọc sách buổi tối',
     content:
-      'Kính đề nghị chỉ huy đơn vị xem xét kéo dài thời gian mở phòng đọc đến 21h30 các ngày thứ Tư và thứ Sáu để cán bộ, chiến sĩ có thêm thời gian ôn tập tài liệu.',
+      'Kính đề nghị chỉ huy đơn vị xem xét kéo dài thời gian mở phòng đọc sách đến 21h30 các ngày thứ Tư và thứ Sáu để cán bộ, chiến sĩ có thêm thời gian ôn tập tài liệu.',
     createdAt: '2026-11-22T19:30:00+07:00',
     status: 'reviewed',
   },
   {
     id: 'fb-2',
     receiptCode: 'YK-2026-109',
-    category: 'Bảo vệ an ninh & Dân chủ cơ sở',
-    targetUnit: 'Toàn hệ thống',
-    isAnonymous: true,
-    subject: 'Góp ý quy trình tiếp nhận phiếu khảo sát định kỳ',
+    targetUnit: 'Đại đội 1',
+    isAnonymous: false,
+    senderName: 'Nguyễn Văn Minh',
     content:
-      'Việc điền phiếu trực tuyến ẩn danh trên điện thoại giúp anh em mạnh dạn phản ánh những vấn đề thực tế hơn rất nhiều so với bỏ phiếu giấy tập trung.',
+      'Đề xuất bổ sung thêm giá phơi quân trang và kiểm tra lại hệ thống đèn chiếu sáng tại khu vực nhà ở tiểu đội 2.',
     createdAt: '2026-11-24T10:15:00+07:00',
+    status: 'received',
+  },
+  {
+    id: 'fb-3',
+    receiptCode: 'YK-2026-112',
+    targetUnit: 'Đại đội 102',
+    isAnonymous: true,
+    content:
+      'Mong muốn ban chỉ huy tổ chức thêm buổi sinh hoạt đối thoại dân chủ định kỳ vào cuối tháng để anh em kịp thời trao đổi tâm tư, nguyện vọng.',
+    createdAt: '2026-11-25T16:40:00+07:00',
     status: 'received',
   },
 ];
