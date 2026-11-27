@@ -13,7 +13,7 @@ import {
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { formatAccountDisplayTitle } from '../../lib/accountLogic';
 import { formatVietnamDateTime } from '../../lib/surveyLogic';
-import logoQuanDoan34 from '../../pics/Logo_quân_đoàn_34.png';
+import logoQuanDoan34 from '../../pics/logo-quan-doan-34.png';
 import {
   FEEDBACK_UNITS,
   type AuthUser,

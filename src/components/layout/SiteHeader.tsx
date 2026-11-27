@@ -1,7 +1,7 @@
 import { LogIn, LogOut, Menu, Shield, ShieldCheck, UserCheck, Users, X } from 'lucide-react';
 import { useState } from 'react';
 import { formatAccountDisplayTitle, isRootAdminUsername } from '../../lib/accountLogic';
-import logoQuanDoan34 from '../../pics/Logo_quân_đoàn_34.png';
+import logoQuanDoan34 from '../../pics/logo-quan-doan-34.png';
 import type { AuthUser } from '../../types/survey';
 
 export type AppTab = 'submit' | 'list' | 'accounts' | 'login';
